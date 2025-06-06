@@ -102,6 +102,14 @@ public class Extractor extends GridSet {
 	}
 	return newfile.getPath();
     }
+
+	private static double[] floatArrayToDouble(float[] arr) {
+    double[] result = new double[arr.length];
+    for (int i = 0; i < arr.length; i++) {
+        result[i] = arr[i];
+    }
+    return result;
+}
     
     static boolean cachedIsCurrent(File file, File newfile, File meta) throws IOException {
 	if (!newfile.exists() || !meta.exists()) return false;
@@ -182,7 +190,7 @@ public class Extractor extends GridSet {
 	    return;
 	}
 	features = new Feature[ngrids];
-	final float[][] vals = new float[numBackground][ngrids];
+	final double[][] vals = new double[numBackground][ngrids];
 	int c=0;
 	for (int i=0; i<numBackground; i++)
 	    vals[c++] = randextract[i].vals;
@@ -271,14 +279,14 @@ public class Extractor extends GridSet {
 		    seen++;
 		    if (chosen<n)
 			randextract[chosen++] = 
-			    new Rc(r,c,(float[]) vals.clone());
+    			new Rc(r, c, floatArrayToDouble(vals));
 		    else {
 			long rnd = (seen < Integer.MAX_VALUE) ?
 			    Utils.generator.nextInt((int) seen) :
 			    Utils.generator.nextLong() % seen;
 			if(rnd < n)
 			    randextract[(int) rnd] =
-				new Rc(r,c,(float[]) vals.clone());
+    				new Rc(r, c, floatArrayToDouble(vals));
 		    }
 		}
 	    }
